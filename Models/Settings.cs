@@ -1,4 +1,4 @@
-namespace forex_experiment.Models
+namespace forex_experiment_worker.Models
 {
     public class Settings
     {

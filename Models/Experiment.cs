@@ -12,7 +12,17 @@ namespace forex_experiment_worker.Models
         public string Indicator{get;set;}
         [BsonElement("startdate")]
         public string StartDate{get;set;}
-         [BsonElement("window")]
+        [BsonElement("enddate")]
+        public string EndDate{get;set;}
+        [BsonElement("position")]
+        public string Position{get;set;}
+        [BsonElement("window")]
         public Variable Window{get;set;}
+        [BsonElement("units")]
+        public Variable Units{get;set;}
+        [BsonElement("stoploss")]
+        public Variable StopLoss{get;set;}
+        [BsonElement("takeprofit")]
+        public Variable TakeProfit{get;set;}
     }
 }

@@ -17,12 +17,12 @@ namespace forex_experiment_worker.Models
         [BsonElement("position")]
         public string Position{get;set;}
         [BsonElement("window")]
-        public Variable Window{get;set;}
+        public Variable<int> Window{get;set;}
         [BsonElement("units")]
-        public Variable Units{get;set;}
+        public Variable<double> Units{get;set;}
         [BsonElement("stoploss")]
-        public Variable StopLoss{get;set;}
+        public Variable<double> StopLoss{get;set;}
         [BsonElement("takeprofit")]
-        public Variable TakeProfit{get;set;}
+        public Variable<double> TakeProfit{get;set;}
     }
 }

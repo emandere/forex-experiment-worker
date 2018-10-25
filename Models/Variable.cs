@@ -1,15 +1,15 @@
 using MongoDB.Bson.Serialization.Attributes;
 namespace forex_experiment_worker.Models
 {
-    public class Variable
+    public class Variable<T>
     {
         [BsonElement("staticOptions")]
-        public string[] staticOptions;
+        public T[] staticOptions;
         [BsonElement("min")]
-        public string min;
+        public T min;
         [BsonElement("max")]
-        public string max;
+        public T max;
         [BsonElement("increment")]
-        public string increment;
+        public T increment;
     }
 }

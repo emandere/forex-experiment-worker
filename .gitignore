@@ -48,3 +48,14 @@ obj/forex-experiment-worker.csproj.nuget.cache
 obj/forex-experiment-worker.csproj.nuget.g.props
 obj/project.assets.json
 obj/Debug/netcoreapp2.1/forex-experiment-worker.assets.cache
+obj/Debug/netcoreapp2.1/forex-experiment-worker.csprojResolveAssemblyReference.cache
+bin/Debug/netcoreapp2.1/forex-experiment-worker.dll
+bin/Debug/netcoreapp2.1/forex-experiment-worker.pdb
+bin/Debug/netcoreapp2.1/forex-experiment-worker.deps.json
+obj/forex-experiment-worker.csproj.nuget.cache
+obj/forex-experiment-worker.csproj.nuget.g.props
+obj/Debug/netcoreapp2.1/forex-experiment-worker.dll
+obj/Debug/netcoreapp2.1/forex-experiment-worker.pdb
+obj/Debug/netcoreapp2.1/forex-experiment-worker.assets.cache
+obj/Debug/netcoreapp2.1/forex-experiment-worker.csproj.CoreCompileInputs.cache
+obj/Debug/netcoreapp2.1/forex-experiment-worker.csprojAssemblyReference.cache

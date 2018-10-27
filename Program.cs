@@ -30,6 +30,9 @@ namespace forex_experiment_worker
             {
                Console.WriteLine(experiment.Name); 
                Console.WriteLine(experiment.Window.staticOptions[0]); 
+               experiment.Window.name ="Window";
+               List<Strategy> x = experiment.Window.CartesianProduct(new List<Strategy>());
+               Console.WriteLine(x[0].Window);
             } 
             Console.WriteLine("Hello World!");
         }

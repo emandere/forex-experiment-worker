@@ -6,7 +6,7 @@ namespace forex_experiment_worker.Models
     {
         public abstract List<Strategy> CartesianProduct(List<Strategy> currentProduct);
     }
-    public class Variable<T>
+    public class Variable<T>:Variable
     {
         [BsonElement("staticOptions")]
         public T[] staticOptions{get;set;}
@@ -21,7 +21,7 @@ namespace forex_experiment_worker.Models
         IEnumerable<T> options()
         { 
             
-            if(staticOptions!=null)
+            if(staticOptions.Length > 0)
             {
                 return staticOptions;
             }
@@ -66,7 +66,7 @@ namespace forex_experiment_worker.Models
             }
             return newStrategy;
         }
-        public List<Strategy> CartesianProduct(List<Strategy> currentProduct)
+        public override List<Strategy> CartesianProduct(List<Strategy> currentProduct)
         {
             var returnNewList = new List<Strategy>();
             if(currentProduct.Count==0)
@@ -75,7 +75,18 @@ namespace forex_experiment_worker.Models
                 {
                     returnNewList.Add(createStrategy(new Strategy(), currentValue));
                 }
+              
                 
+            }
+            else
+            {
+                foreach(Strategy strat in currentProduct)
+                {
+                    foreach(var currentValue in options())
+                    {
+                        returnNewList.Add(createStrategy(strat, currentValue));
+                    }
+                }
             }
 
             return returnNewList;

@@ -29,10 +29,8 @@ namespace forex_experiment_worker
             foreach(ForexExperiment experiment in await repository.GetAllExperiments())
             {
                Console.WriteLine(experiment.Name); 
-               Console.WriteLine(experiment.Window.staticOptions[0]); 
-               experiment.Window.name ="Window";
-               List<Strategy> x = experiment.Window.CartesianProduct(new List<Strategy>());
-               Console.WriteLine(x[0].Window);
+               List<Strategy> x2 = experiment.GetStrategies();
+               Console.WriteLine(x2.Count);
             } 
             Console.WriteLine("Hello World!");
         }

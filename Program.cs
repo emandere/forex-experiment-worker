@@ -30,6 +30,17 @@ namespace forex_experiment_worker
             {
                Console.WriteLine(experiment.Name); 
                List<Strategy> x2 = experiment.GetStrategies();
+               foreach(Strategy s in x2)
+               {
+                   TradingSession session = new TradingSession();
+                   session.Name = experiment.Name+"_0";
+                   session.StartDate = experiment.StartDate;
+                   session.EndDate = experiment.EndDate;
+                   session.TradingStrategy = s;
+                   session.Read = false;
+                   session.StartAmount = 2000.0;
+                   await repository.PushTradingStrategySession(session);
+               }
                Console.WriteLine(x2.Count);
             } 
             Console.WriteLine("Hello World!");

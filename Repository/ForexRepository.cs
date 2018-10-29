@@ -26,5 +26,13 @@ namespace forex_experiment_worker.Repository
             await _context.Experiments.InsertOneAsync(item);
             
         }
+
+        public async Task PushTradingStrategySession(TradingSession item)
+        {
+        
+            await _context.TradingSessionQueue.InsertOneAsync(item);
+            
+        }
+
     }    
 }

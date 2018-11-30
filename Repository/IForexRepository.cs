@@ -9,5 +9,7 @@ namespace forex_experiment_worker.Repository
         //Task<IEnumerable<ForexExperiment>> GetAllNotes();
         Task<IEnumerable<ForexExperiment>> GetAllExperiments();
         Task AddExperiment(ForexExperiment item);
+        Task<IEnumerable<ForexSession>> GetForexSessions();
+        Task<IEnumerable<ForexSession>> GetForexSessions(string experimentId);
     }
 }

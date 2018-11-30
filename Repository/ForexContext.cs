@@ -28,5 +28,13 @@ namespace forex_experiment_worker.Repository
                 return _database.GetCollection<TradingSession>("tradingsessionqueue");
             }
         }
+
+        public IMongoCollection<ForexSession> ForexSessions
+        {
+            get
+            {
+                return _database.GetCollection<ForexSession>("session");
+            }
+        }
     }
 }

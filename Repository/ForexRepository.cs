@@ -34,5 +34,17 @@ namespace forex_experiment_worker.Repository
             
         }
 
+        public async Task<IEnumerable<ForexSession>> GetForexSessions(string experimentId)
+        {
+            var result = await _context.ForexSessions.Find((s)=>s.ExperimentId==experimentId).ToListAsync();
+            return result;
+        }
+
+         public async Task<IEnumerable<ForexSession>> GetForexSessions()
+        {
+            var result = await _context.ForexSessions.Find(_=>true).ToListAsync();
+            return result;
+        }
+
     }    
 }

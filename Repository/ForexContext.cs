@@ -13,11 +13,11 @@ namespace forex_experiment_worker.Repository
                 _database = client.GetDatabase(settings.Database);
         }
 
-        public IMongoCollection<ForexExperiment> Experiments
+        public IMongoCollection<ForexExperimentMongo> Experiments
         {
             get
             {
-                return _database.GetCollection<ForexExperiment>("experiments");
+                return _database.GetCollection<ForexExperimentMongo>("experiments");
             }
         }
 
@@ -29,11 +29,11 @@ namespace forex_experiment_worker.Repository
             }
         }
 
-        public IMongoCollection<ForexSession> ForexSessions
+        public IMongoCollection<ForexSessionMongo> ForexSessions
         {
             get
             {
-                return _database.GetCollection<ForexSession>("session");
+                return _database.GetCollection<ForexSessionMongo>("session");
             }
         }
     }

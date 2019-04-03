@@ -1,11 +1,13 @@
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 namespace forex_experiment_worker.Models
 {
     public class TradingSession
     {
+        public ObjectId Id { get; set; }
         [BsonElement("strategy")]
-        public Strategy TradingStrategy{get;set;}
+        public StrategyMongo TradingStrategy{get;set;}
         [BsonElement("name")]
         public string Name{get;set;}
         [BsonElement("startdate")]
@@ -16,6 +18,9 @@ namespace forex_experiment_worker.Models
         public double StartAmount{get;set;}
         [BsonElement("read")]
         public bool Read{get;set;}
+        [BsonElement("experimentId")]
+        public string ExperimentId{get;set;}
+        public string percentcomplete{get;set;}
 
 
     }

@@ -14,13 +14,13 @@ namespace forex_experiment_worker.Repository
             _context = new ForexContext(settings);
         }
 
-        public async Task<IEnumerable<ForexExperiment>> GetAllExperiments()
+        public async Task<IEnumerable<ForexExperimentMongo>> GetAllExperiments()
         {
             var documents = await _context.Experiments.Find(_ => true).ToListAsync();
             return documents;
         }
 
-        public async Task AddExperiment(ForexExperiment item)
+        public async Task AddExperiment(ForexExperimentMongo item)
         {
         
             await _context.Experiments.InsertOneAsync(item);
@@ -34,13 +34,13 @@ namespace forex_experiment_worker.Repository
             
         }
 
-        public async Task<IEnumerable<ForexSession>> GetForexSessions(string experimentId)
+        public async Task<IEnumerable<ForexSessionMongo>> GetForexSessions(string experimentId)
         {
             var result = await _context.ForexSessions.Find((s)=>s.ExperimentId==experimentId).ToListAsync();
             return result;
         }
 
-         public async Task<IEnumerable<ForexSession>> GetForexSessions()
+         public async Task<IEnumerable<ForexSessionMongo>> GetForexSessions()
         {
             var result = await _context.ForexSessions.Find(_=>true).ToListAsync();
             return result;

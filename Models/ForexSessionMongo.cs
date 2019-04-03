@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace forex_experiment_worker.Models
 {
-    public  class ForexSession
+    public  class ForexSessionMongo
     {
         //[BsonElement("_id")]
         //public string _Id { get; set; }
@@ -38,16 +38,23 @@ namespace forex_experiment_worker.Models
         public string CurrentTime { get; set; }
 
         [BsonElement("strategy")]
-        public Strategy Strategy { get; set; }
+        public StrategyMongo Strategy { get; set; }
 
         [BsonElement("sessionUser")]
-        public SessionUser SessionUser { get; set; }
+        public SessionUserMongo SessionUser { get; set; }
 
         [BsonElement("percentComplete")]
         public string PercentComplete { get; set; }
+
+        [BsonElement("elapsedTime")]
+        public string elapsedTime { get; set; }
+        [BsonElement("beginSessionTime")]
+        public string beginSessionTime { get; set; }
+        [BsonElement("endSessionTime")]
+        public string endSessionTime { get; set; }
     }
 
-    public  class SessionUser
+    public  class SessionUserMongo
     {
         [BsonId]
         [BsonRepresentation(BsonType.String)]
@@ -60,20 +67,20 @@ namespace forex_experiment_worker.Models
         public object Status { get; set; }
 
         [BsonElement("Accounts")]
-        public Accounts Accounts { get; set; }
+        public AccountsMongo Accounts { get; set; }
     }
 
-    public  class Accounts
+    public  class AccountsMongo
     {
         
         [BsonElement("primary")]
-        public Account Primary { get; set; }
+        public AccountMongo Primary { get; set; }
 
         [BsonElement("secondary")]
-        public Account Secondary { get; set; }
+        public AccountMongo Secondary { get; set; }
     }
 
-    public  class Account
+    public  class AccountMongo
     {
         [BsonId]
         [BsonRepresentation(BsonType.String)]
@@ -95,22 +102,22 @@ namespace forex_experiment_worker.Models
         public double RealizedPl { get; set; }
 
         [BsonElement("Trades")]
-        public Trade[] Trades { get; set; }
+        public TradeMongo[] Trades { get; set; }
 
         [BsonElement("orders")]
-        public Order[] Orders { get; set; }
+        public OrderMongo[] Orders { get; set; }
 
         [BsonElement("closedTrades")]
-        public Trade[] ClosedTrades { get; set; }
+        public TradeMongo[] ClosedTrades { get; set; }
 
         [BsonElement("balanceHistory")]
-        public BalanceHistory[] BalanceHistory { get; set; }
+        public BalanceHistoryMongo[] BalanceHistory { get; set; }
 
         [BsonElement("idcount")]
         public long Idcount { get; set; }
     }
 
-    public  class BalanceHistory
+    public  class BalanceHistoryMongo
     {
         [BsonElement("date")]
         public string Date { get; set; }
@@ -119,7 +126,7 @@ namespace forex_experiment_worker.Models
         public double Amount { get; set; }
     }
 
-    public  class Trade
+    public  class TradeMongo
     {
         [BsonId]
         [BsonRepresentation(BsonType.Int64)]
@@ -158,9 +165,27 @@ namespace forex_experiment_worker.Models
 
         [BsonElement("init")]
         public bool Init { get; set; }
+
+        double Position()
+        {
+            if(Long)
+                return 1.0;
+            else
+                return -1.0;
+        }
+
+        double adj()
+        {
+            double adj= (Pair=="USDJPY") ? 0.01 : 1.0;
+            return adj;
+        }
+        public double PLCalc()
+        {
+            return Units * Position() * (ClosePrice - OpenPrice)*adj();
+        }
     }
 
-    public  class Order
+    public  class OrderMongo
     {
         [BsonElement("expirationDate")]
         public object ExpirationDate { get; set; }
@@ -175,7 +200,7 @@ namespace forex_experiment_worker.Models
         public bool Above { get; set; }
 
         [BsonElement("trade")]
-        public Trade Trade { get; set; }
+        public TradeMongo Trade { get; set; }
     }
 
 }

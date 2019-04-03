@@ -27,10 +27,10 @@ namespace forex_experiment_worker
 
             ForexRepository repository = new ForexRepository(settings);
            
-            foreach(ForexExperiment experiment in await repository.GetAllExperiments())
+            foreach(ForexExperimentMongo experiment in await repository.GetAllExperiments())
             {
-               Console.WriteLine(experiment.Name); 
-               foreach(ForexSession session in await repository.GetForexSessions(experiment.Name))
+               Console.WriteLine(experiment.name); 
+               foreach(ForexSessionMongo session in await repository.GetForexSessions(experiment.name))
                {
                    Console.WriteLine(session.Id +" "+session
                    .SessionUser

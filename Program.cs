@@ -52,8 +52,8 @@ namespace forex_experiment_worker
                 .BuildServiceProvider(); 
             
 
-             var serv = serviceProvider.GetService<StrategyTestServices>();
-             foreach(var message in await serv.ExperimentNames())
+             var strategyTester = serviceProvider.GetService<StrategyTestServices>();
+             foreach(var message in await strategyTester.ExperimentNames())
              {
                  Console.WriteLine(message);     
              }

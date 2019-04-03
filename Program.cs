@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
@@ -31,7 +32,12 @@ namespace forex_experiment_worker
                Console.WriteLine(experiment.Name); 
                foreach(ForexSession session in await repository.GetForexSessions(experiment.Name))
                {
-                   Console.WriteLine(session.Id);
+                   Console.WriteLine(session.Id +" "+session
+                   .SessionUser
+                   .Accounts
+                   .Primary
+                   .BalanceHistory
+                   .Last().Amount);
                }
             } 
             Console.WriteLine("Hello World!");

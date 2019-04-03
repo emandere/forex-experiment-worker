@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using forex_experiment_worker.Models;
 using MongoDB.Driver;
+using Microsoft.Extensions.Options;
 
 namespace forex_experiment_worker.Repository
 {
@@ -9,7 +10,7 @@ namespace forex_experiment_worker.Repository
     {
         private readonly ForexContext _context = null;
 
-        public ForexRepository(Settings settings)
+        public ForexRepository(IOptions<Settings> settings)
         {
             _context = new ForexContext(settings);
         }

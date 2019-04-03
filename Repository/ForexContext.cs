@@ -1,4 +1,5 @@
 using MongoDB.Driver;
+using Microsoft.Extensions.Options;
 using forex_experiment_worker.Models;
 namespace forex_experiment_worker.Repository
 {
@@ -6,11 +7,11 @@ namespace forex_experiment_worker.Repository
     {
         private readonly IMongoDatabase _database = null;
 
-        public ForexContext(Settings settings)
+        public ForexContext(IOptions<Settings> settings)
         {
-            var client = new MongoClient(settings.ConnectionString);
+            var client = new MongoClient(settings.Value.ConnectionString);
             if (client != null)
-                _database = client.GetDatabase(settings.Database);
+                _database = client.GetDatabase(settings.Value.Database);
         }
 
         public IMongoCollection<ForexExperimentMongo> Experiments

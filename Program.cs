@@ -8,41 +8,57 @@ using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using forex_experiment_worker.Models;
 using forex_experiment_worker.Repository;
+using forex_experiment_worker.Services;
+using forex_experiment_worker.Mapper;
+using forex_experiment_worker.Config;
 
+using Microsoft.Extensions.DependencyInjection;
+using AutoMapper;
 namespace forex_experiment_worker
 {
     class Program
     {
-        static async Task Main(string[] args)
+        public static async Task Main(string[] args)
         {
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-
             IConfigurationRoot configuration = builder.Build();
-            Settings settings = new Settings();//configuration.GetConnectionString("Storage"));
-            settings.ConnectionString= configuration.GetSection("MongoConnection:ConnectionString").Value;
-            settings.Database = configuration.GetSection("MongoConnection:Database").Value;
+            
 
-            ForexRepository repository = new ForexRepository(settings);
-           
-            foreach(ForexExperimentMongo experiment in await repository.GetAllExperiments())
+
+            var config = new AutoMapper.MapperConfiguration(cfg =>
             {
-               Console.WriteLine(experiment.name); 
-               foreach(ForexSessionMongo session in await repository.GetForexSessions(experiment.name))
-               {
-                   Console.WriteLine(session.Id +" "+session
-                   .SessionUser
-                   .Accounts
-                   .Primary
-                   .BalanceHistory
-                   .Last().Amount);
-               }
-            } 
-            Console.WriteLine("Hello World!");
-        }
+                cfg.AddProfile(new ForexExperimentProfile());
+                cfg.AddProfile(new ForexSessionProfile());
+            });
 
-        
+
+
+            IMapper mapper = config.CreateMapper();
+             var serviceProvider = new ServiceCollection()
+                .AddSingleton<IForexRepository, ForexRepository>()
+                .AddTransient<ForexExperimentMap,ForexExperimentMap>()
+                .AddSingleton<StrategyTestServices,StrategyTestServices>()
+                .AddAutoMapper()
+                .Configure<Settings>(options =>
+                {
+                    options.ConnectionString 
+                        = configuration.GetSection("MongoConnection:ConnectionString").Value;
+                    options.Database 
+                        = configuration.GetSection("MongoConnection:Database").Value;
+                })
+                .BuildServiceProvider(); 
+            
+
+             var serv = serviceProvider.GetService<StrategyTestServices>();
+             foreach(var message in await serv.ExperimentNames())
+             {
+                 Console.WriteLine(message);     
+             }
+             
+           
+        }        
     }
 }

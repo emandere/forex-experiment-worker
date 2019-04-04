@@ -37,5 +37,13 @@ namespace forex_experiment_worker.Repository
                 return _database.GetCollection<ForexSessionMongo>("session");
             }
         }
+
+        public IMongoCollection<ForexPriceMongo> ForexPrices
+        {
+            get
+            {
+                return _database.GetCollection<ForexPriceMongo>("forexdailyprices");
+            }
+        }
     }
 }

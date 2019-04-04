@@ -32,6 +32,11 @@ namespace forex_experiment_worker.Mapper
             return result;
         }
 
+        public async Task<IEnumerable<ForexPriceMongo>> GetPrices()
+        {
+            return await _context.ForexPrices.Find((x)=>x.pair=="AUDUSD").ToListAsync();
+        }
+
         public async Task<ForexSessionMongo> GetForexSessionMongo(string sessionId)
         {
             var result = await _context.ForexSessions.Find((s)=>s.Id==sessionId).SingleOrDefaultAsync();

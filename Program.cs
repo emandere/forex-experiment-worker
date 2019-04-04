@@ -26,18 +26,14 @@ namespace forex_experiment_worker
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
             IConfigurationRoot configuration = builder.Build();
             
-
-
             var config = new AutoMapper.MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new ForexExperimentProfile());
                 cfg.AddProfile(new ForexSessionProfile());
             });
 
-
-
             IMapper mapper = config.CreateMapper();
-             var serviceProvider = new ServiceCollection()
+            var serviceProvider = new ServiceCollection()
                 .AddSingleton<IForexRepository, ForexRepository>()
                 .AddTransient<ForexExperimentMap,ForexExperimentMap>()
                 .AddSingleton<StrategyTestServices,StrategyTestServices>()
@@ -52,12 +48,11 @@ namespace forex_experiment_worker
                 .BuildServiceProvider(); 
             
 
-             var strategyTester = serviceProvider.GetService<StrategyTestServices>();
-             foreach(var message in await strategyTester.ExperimentNames())
-             {
-                 Console.WriteLine(message);     
-             }
-             
+            var strategyTester = serviceProvider.GetService<StrategyTestServices>();
+            foreach(var message in await strategyTester.ForexPrices())
+            {
+                Console.WriteLine(message);     
+            }
            
         }        
     }

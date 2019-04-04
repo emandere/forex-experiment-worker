@@ -18,6 +18,13 @@ namespace forex_experiment_worker.Services
             var experimentsMongo =  await _forexExperimentMap.GetExperiments();
             return experimentsMongo.Select(x=>x.name);
         }
+
+        public async Task<IEnumerable<string>> ForexPrices()
+        {
+            var pricesMongo = await _forexExperimentMap.GetPrices();
+            return pricesMongo.Select(x=>x.datetime.ToString());
+        }
+
     }
 
 }

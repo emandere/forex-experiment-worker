@@ -49,7 +49,7 @@ namespace forex_experiment_worker
             
 
             var strategyTester = serviceProvider.GetService<StrategyTestServices>();
-            foreach(var message in await strategyTester.ForexPrices())
+            foreach(var message in await strategyTester.ForexPrices("AUDUSD","20170101","20190101"))
             {
                 Console.WriteLine(message);     
             }

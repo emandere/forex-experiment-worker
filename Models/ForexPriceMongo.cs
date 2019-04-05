@@ -1,3 +1,4 @@
+using System;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 namespace forex_experiment_worker.Models
@@ -19,7 +20,7 @@ namespace forex_experiment_worker.Models
         [BsonElement("close")]
         public double close { get; set; }
         [BsonElement("datetime")]
-        public BsonDateTime datetime { get; set; }
+        public DateTime datetime { get; set; }
 
 
 

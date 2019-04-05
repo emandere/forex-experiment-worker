@@ -19,9 +19,9 @@ namespace forex_experiment_worker.Services
             return experimentsMongo.Select(x=>x.name);
         }
 
-        public async Task<IEnumerable<string>> ForexPrices()
+        public async Task<IEnumerable<string>> ForexPrices(string pair,string startdate,string enddate)
         {
-            var pricesMongo = await _forexExperimentMap.GetPrices();
+            var pricesMongo = await _forexExperimentMap.GetPrices(pair,startdate,enddate);
             return pricesMongo.Select(x=>x.datetime.ToString());
         }
 

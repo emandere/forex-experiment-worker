@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
@@ -32,9 +33,15 @@ namespace forex_experiment_worker.Mapper
             return result;
         }
 
-        public async Task<IEnumerable<ForexPriceMongo>> GetPrices()
+        public async Task<IEnumerable<ForexPriceMongo>> GetPrices(string pair,string startdate,string enddate)
         {
-            return await _context.ForexPrices.Find((x)=>x.pair=="AUDUSD").ToListAsync();
+            DateTime startdt = DateTime.ParseExact(startdate,"yyyyMMdd",CultureInfo.InvariantCulture);
+            DateTime enddt = DateTime.ParseExact(enddate,"yyyyMMdd",CultureInfo.InvariantCulture);
+
+            return await _context.ForexPrices.Find(x=> x.pair == pair && x.datetime > startdt
+                                                                      && x.datetime < enddt   
+                                                                      )
+                                                    .ToListAsync();
         }
 
         public async Task<ForexSessionMongo> GetForexSessionMongo(string sessionId)

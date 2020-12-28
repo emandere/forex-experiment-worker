@@ -9,6 +9,8 @@ resources:
 - repo: self
 
 variables:
+  serviceName: 'forex-experiment-worker'
+  x86ImageName: 'emandere/$(serviceName)-x86'
   tag: '$(Build.BuildId)'
 
 stages:
@@ -24,6 +26,7 @@ stages:
       displayName: Build an image
       inputs:
         command: buildAndPush
+        repository: $(x86ImageName)
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         containerRegistry: 'dockerhub'
         tags: |

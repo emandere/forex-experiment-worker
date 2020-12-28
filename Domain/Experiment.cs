@@ -1,5 +1,3 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 using System.Linq;
 using forex_experiment_worker.Models;

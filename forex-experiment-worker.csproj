@@ -1,19 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RootNamespace>forex_experiment_worker</RootNamespace>
-    <LangVersion>latest</LangVersion>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0"/>
-    <PackageReference Include="mongocsharpdriver" Version="2.7.0" />
-    
+    <PackageReference Include="AWSSDK.S3" Version="3.3.110.19"/>
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.100.1"/>
+    <PackageReference Include="AWSSDK.Core" Version="3.5.1.56"/>
+    <PackageReference Include="AWSSDK.SecretsManager" Version="3.5.0.56"/>
   </ItemGroup>
 </Project>

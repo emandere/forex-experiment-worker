@@ -34,8 +34,10 @@ namespace forex_experiment_worker
         };
         static async Task Main(string[] args)
         {
-            Console.WriteLine("HeyYoYo");
-            await UploadFileToS3("forexexperiments","Hello","world");
+            Console.WriteLine("Test Secrets!");
+            Console.WriteLine(Environment.GetEnvironmentVariable("mysecret"));
+            
+            //await UploadFileToS3("forexexperiments","Hello","world");
             /*
             var startDate = "20190324";
             var endDate = "20200522";

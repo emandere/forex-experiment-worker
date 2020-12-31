@@ -41,6 +41,7 @@ namespace forex_experiment_worker
             string key = Environment.GetEnvironmentVariable("key");
             
             await UploadFileToS3(keyId,key,"forexexperiments","Hello","world!!!!");
+            
             /*
             var startDate = "20190324";
             var endDate = "20200522";
@@ -96,7 +97,7 @@ namespace forex_experiment_worker
         public static async Task UploadFileToS3(string awskeyId,string awskey,
                             string bucketname,string key,string info)
         {
-            using (var client = new AmazonS3Client(awskeyId,awskey,RegionEndpoint.USEast1))
+            using (var client = string.IsNullOrEmpty(awskeyId) ? new AmazonS3Client(RegionEndpoint.USEast1) : new AmazonS3Client(awskeyId,awskey,RegionEndpoint.USEast1))
             {
                 using (var newMemoryStream = new MemoryStream())
                 {

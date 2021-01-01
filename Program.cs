@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -13,6 +14,8 @@ using Amazon.SecretsManager.Model;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
+
+using Dasync.Collections;
 
 using forex_experiment_worker.Models;
 
@@ -39,9 +42,24 @@ namespace forex_experiment_worker
 
             string keyId = Environment.GetEnvironmentVariable("keyId");
             string key = Environment.GetEnvironmentVariable("key");
+            var realtimeprices = new Dictionary<string,ForexPricesDTO>();
             
+            
+            var days = await GetDays(keyId,key,"forexdailyprices");
+
+            await days.ParallelForEachAsync(async x => 
+            {
+                var pricesResult = await GetRealPrices(x.Pair,x.Datetime.ToString("yyyyMMdd"),"forexdailyrealprices");
+                realtimeprices.Add(pricesResult.Item1,pricesResult.Item2);
+            },maxDegreeOfParallelism: 8);
+
+            foreach (var day in days)
+            {
+                Console.WriteLine(day.Pair + " " + day.Date);
+            }
+
             await UploadFileToS3(keyId,key,"forexexperiments","Hello","world!!!!");
-            
+            //await UploadDailyPrices();
             /*
             var startDate = "20190324";
             var endDate = "20200522";
@@ -70,7 +88,97 @@ namespace forex_experiment_worker
 
         }
 
-        public static async Task<ForexPricesDTO> ReadFileFromS3(string key,string bucket)
+        public static async Task UploadDailyPrices()
+        {
+            var startDate = "20190324";
+            var endDate = "20200522";
+            
+            foreach(var pair in pairs)
+            {
+                var url = $"http://localhost:5002/api/forexdailyprices/{pair}/{startDate}/{endDate}";
+                var days = await GetAsync<List<ForexDailyPriceDTO>>(url);
+                foreach (var day in days)
+                {
+                    var dayString= JsonSerializer.Serialize<ForexDailyPriceDTO>(day);
+                    await UploadFileToS3(null,null,"forexdailyprices",day.Pair+day.Datetime.ToString("yyyyMMdd"),dayString);
+                    Console.WriteLine(day.Pair+day.Date + " uploaded");
+
+                }
+                
+                
+            }
+        }
+
+        /*public static async Task UploadDailyRealPrices()
+        {
+            var startDate = "20190324";
+            var endDate = "20200522";
+            
+            foreach(var pair in pairs)
+            {
+                var url = $"http://localhost:5002/api/forexdailyprices/{pair}/{startDate}/{endDate}";
+                var days = await GetAsync<List<ForexDailyPriceDTO>>(url);
+                foreach (var day in days)
+                {
+                    var realPrices = await GetRealPrices(day.Pair,day.Datetime.ToString("yyyyMMdd"));
+
+                    await UploadFileToS3(null,null,"forexdailyrealprices",realPrices.Item1,JsonSerializer.Serialize<ForexPricesDTO>(realPrices.Item2));
+                  
+                    Console.WriteLine(realPrices.Item1 + " uploaded");
+
+                }
+                
+                
+            }
+        }*/
+
+
+        public static async Task<List<ForexDailyPriceDTO>> GetDays(string awskeyId,string awskey, string bucketname)
+        {
+             var days = new List<ForexDailyPriceDTO>();
+             var dayskey = new List<string>();
+             using (var client = string.IsNullOrEmpty(awskeyId) ? new AmazonS3Client(RegionEndpoint.USEast1) : new AmazonS3Client(awskeyId,awskey,RegionEndpoint.USEast1))
+             {
+                 ListObjectsV2Request request = new ListObjectsV2Request
+                {
+                    BucketName = bucketname,
+                    MaxKeys = 10
+                };
+
+
+                ListObjectsV2Response response;
+                do
+                {
+                    response = await client.ListObjectsV2Async(request);
+
+                    // Process the response.
+                    foreach (S3Object entry in response.S3Objects)
+                    {
+                        //Console.WriteLine("key = {0} size = {1}",
+                         //   entry.Key, entry.Size);
+                        //var dailyprice = await ReadFileFromS3<ForexDailyPriceDTO>(entry.Key,bucketname); 
+                        dayskey.Add(entry.Key); 
+                        Console.WriteLine(entry.Key);
+                         
+                    }
+                    //Console.WriteLine("Next Continuation Token: {0}", response.NextContinuationToken);
+                    request.ContinuationToken = response.NextContinuationToken;
+                } while (response.IsTruncated);
+
+                await dayskey.ParallelForEachAsync(async x => 
+                {
+                   var dailyprice = await ReadFileFromS3<ForexDailyPriceDTO>(x,bucketname); 
+                   days.Add(dailyprice);
+                   Console.WriteLine(x + "Added");
+                },maxDegreeOfParallelism: 8);
+
+                
+                return days;
+
+             }
+        }
+
+        public static async Task<T> ReadFileFromS3<T>(string key,string bucket)
         {
             var responseBody = string.Empty;
             var request = new GetObjectRequest
@@ -89,7 +197,7 @@ namespace forex_experiment_worker
                 //Console.WriteLine("Content type: {0}", contentType);
 
                 responseBody = reader.ReadToEnd(); // Now you process the response body.
-                return JsonSerializer.Deserialize<ForexPricesDTO>(responseBody);
+                return JsonSerializer.Deserialize<T>(responseBody);
             }
             
         }
@@ -116,11 +224,11 @@ namespace forex_experiment_worker
             }
         }
 
-        static async Task<(string,ForexPricesDTO)> GetRealPrices(string pair,string day)
+        static async Task<(string,ForexPricesDTO)> GetRealPrices(string pair,string day,string bucketName)
         {
-            var urlgetdailyrealprices = $"http://localhost:5002/api/forexdailyrealprices/{pair}/{day}";
+            //var urlgetdailyrealprices = $"http://localhost:5002/api/forexdailyrealprices/{pair}/{day}";
                     
-            var dailyrealprices = await GetAsync<ForexPricesDTO>(urlgetdailyrealprices);
+            var dailyrealprices = await ReadFileFromS3<ForexPricesDTO>(pair+day,bucketName);
             Console.WriteLine($"reading {pair} {day}");
 
             return (pair+day,dailyrealprices);
